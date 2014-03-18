@@ -1,0 +1,6 @@
+<layers>
+    <layer
+        name="uniofleicester.jsimages"
+        interface="uniofleicester.jsimages.interfaces.IUOLImagesThemeLayer"
+        />
+</layers>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<object name="portal_javascripts">
+
+ <javascript
+     id="++resource++uniofleicester.jsimages/simple-inheritance.min.js"/>
+
+ <javascript
+     id="++resource++uniofleicester.jsimages/code-photoswipe-jQuery-1.0.11.min.js"
+     />
+
+</object>

@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="plone">
+
+<body>
+
+    <metal:content-core fill-slot="content-core" tal:define="batch view/contents">
+        
+        <ul class="uol-gallery">
+            <tal:block tal:repeat="brain batch">
+            <li class="uol-gallery-image" tal:define="image brain/getObject">
+            
+                <a href="#link-to-image" tal:attributes="href image/absolute_url">
+                    <img src="" alt="" tal:replace="structure python:image.tag(scale='mini', title=image.Description(), alt='')" />
+                    <h2 class="image-title" tal:content="image/Title">Sample Image</h2>
+                    <p class="image-description" tal:content="image/Description">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                </a>
+            </li>
+            </tal:block>
+        </ul>
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $(".uol-gallery a").photoSwipe();
+        });
+        </script>
+
+    </metal:content-core>
+
+</body>
+</html>
+

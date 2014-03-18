@@ -1,0 +1,40 @@
+.icons-on .contenttype-gallery {
+    background: no-repeat transparent 0px -644px url(../contenttypes-sprite.png);
+}
+
+.contenttype-gallery {
+    display: inline-block;
+    line-height: 2em;
+    padding-left: 20px !important;
+}
+
+
+#content ul.uol-gallery {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+}
+#content ul.uol-gallery li.uol-gallery-image {
+    display: inline;
+    text-align: left;
+}
+#content ul.uol-gallery li.uol-gallery-image a {
+    display: inline-block;
+    width: 200px;
+    padding: 10px;
+    margin-bottom: 10px;
+    vertical-align: top;
+    text-decoration: none;
+    color: #333;
+}
+#content ul.uol-gallery li.uol-gallery-image a:hover {
+    background-color: #DDD;
+}
+#content ul.uol-gallery li.uol-gallery-image a img {}
+#content ul.uol-gallery li.uol-gallery-image a h2.image-title {
+    margin: 0;
+}
+#content ul.uol-gallery li.uol-gallery-image a p.image-description {
+    margin: 5px 0 0 0;
+}
+

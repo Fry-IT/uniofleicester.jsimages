@@ -25,8 +25,14 @@ setup(name='uniofleicester.jsimages',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'plone.api',
           # -*- Extra requirements: -*-
       ],
+      extras_require={
+          'test': [
+              'plone.app.testing',
+          ]
+      },
       entry_points="""
       # -*- Entry points: -*-
 
