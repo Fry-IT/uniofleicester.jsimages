@@ -6,6 +6,7 @@
     i18n_domain="uniofleicester.jsimages">
 
   <include package=".browser" />
+  <include package=".content" />
 
   <genericsetup:registerProfile
       name="default"

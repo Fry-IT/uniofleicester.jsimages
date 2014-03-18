@@ -1,0 +1,11 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    i18n_domain="uniofleicester.jsimages">
+
+    <adapter
+        name="uniofleicester.jsimages.slideshow-extender"
+        factory=".extender.SlideshowExtender"
+        provides="archetypes.schemaextender.interfaces.ISchemaExtender" />
+
+</configure>

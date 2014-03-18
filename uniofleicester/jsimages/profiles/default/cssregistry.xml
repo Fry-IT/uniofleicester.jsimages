@@ -6,6 +6,10 @@
     insert-before="*" />
 
  <stylesheet
+    id="++resource++uniofleicester.jsimages/bjqs.css"
+    insert-before="*" />
+
+ <stylesheet
     id="++resource++uniofleicester.jsimages/styles.css"
     insert-before="*" />
 

@@ -23,6 +23,16 @@
         layer="..interfaces.IUOLImagesThemeLayer"
         />
 
+    <browser:viewlet
+        name="uniofleicester.jsimages.slideshow"
+        for="Products.ATContentTypes.interfaces.IATDocument"
+        layer="..interfaces.IUOLImagesThemeLayer"
+        manager="plone.app.layout.viewlets.interfaces.IAboveContentBody"
+        class=".slideshow.SlideshowViewlet"
+		template="slideshow.pt"
+        permission="zope2.View"
+        />
+
     <browser:resourceDirectory
         name="uniofleicester.jsimages"
         directory="resources"

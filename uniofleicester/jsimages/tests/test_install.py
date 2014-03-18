@@ -2,8 +2,9 @@
 from plone import api
 import unittest2
 from plone.testing.z2 import Browser
+from zope.component import getMultiAdapter
 
-from plone.app.testing import SITE_OWNER_NAME
+from plone.app.testing import TEST_USER_NAME, TEST_USER_ID
 from plone.app.testing import login, setRoles
 import transaction
 
@@ -28,36 +29,19 @@ class IntegrationTest(unittest2.TestCase):
         pt = api.portal.get_tool('portal_types')
         self.assertTrue(pt.getTypeInfo('Gallery'))
 
-        # configlet
-        #cp = api.portal.get_tool('portal_controlpanel')
-        #actions = cp.listActions()
-        #a_ids = [x.id for x in actions]
-        #self.assertTrue('cookielaw-controlpanel' in a_ids)
-        #for act in actions:
-        #    if act.id == 'cookielaw-controlpanel':
-        #        self.assertEqual(act.category, 'Products')
-
         # css registry
         css = api.portal.get_tool('portal_css')
         css_ids = css.getResourceIds()
         self.assertTrue('++resource++uniofleicester.jsimages/styles.css' in css_ids)
         self.assertTrue('++resource++uniofleicester.jsimages/photoswipe.css' in css_ids)
+        self.assertTrue('++resource++uniofleicester.jsimages/bjqs.css' in css_ids)
 
         # js registry
         js = api.portal.get_tool('portal_javascripts')
         js_ids = js.getResourceIds()
         self.assertTrue('++resource++uniofleicester.jsimages/simple-inheritance.min.js' in js_ids)
         self.assertTrue('++resource++uniofleicester.jsimages/code-photoswipe-jQuery-1.0.11.min.js' in js_ids)
-
-        # configuration registry
-        #record = api.portal.get_registry_record(
-        #    'collective.cookielaw.controlpanel.ICookieLawPanel.more_url')
-        #self.assertEqual(record, u'/cookies')
-
-        # skins
-        #skins = api.portal.get_tool('portal_skins')
-        #for skin in skins.getSkinPaths():
-        #    self.assertIn('cookielaw', skin[1].split(','))
+        self.assertTrue('++resource++uniofleicester.jsimages/bjqs-1.3.js' in js_ids)
 
     def testUninstall(self):
         qi = api.portal.get_tool('portal_quickinstaller')
@@ -85,12 +69,14 @@ class IntegrationTest(unittest2.TestCase):
         css_ids = css.getResourceIds()
         self.assertFalse('++resource++uniofleicester.jsimages/styles.css' in css_ids)
         self.assertFalse('++resource++uniofleicester.jsimages/photoswipe.css' in css_ids)
+        self.assertFalse('++resource++uniofleicester.jsimages/bjqs.css' in css_ids)
 
         # js registry
         js = api.portal.get_tool('portal_javascripts')
         js_ids = js.getResourceIds()
         self.assertFalse('++resource++uniofleicester.jsimages/simple-inheritance.min.js' in js_ids)
         self.assertFalse('++resource++uniofleicester.jsimages/code-photoswipe-jQuery-1.0.11.min.js' in js_ids)
+        self.assertFalse('++resource++uniofleicester.jsimages/bjqs-1.3.js' in js_ids)
 
 
 class FunctionalTest(unittest2.TestCase):
@@ -108,7 +94,8 @@ class FunctionalTest(unittest2.TestCase):
         self.assertEqual(gt.default_view, "gallery_view")
 
     def testGalleryFolder(self):
-        login(self.portal.aq_parent, SITE_OWNER_NAME)
+        login(self.portal, TEST_USER_NAME)
+        setRoles(self.portal, TEST_USER_ID, ('Manager', ))
 
         gallery = api.content.create(self.portal, "Gallery", "gallery", "Gallery")
 
@@ -129,3 +116,36 @@ class FunctionalTest(unittest2.TestCase):
         self.assertTrue('uol-gallery' in browser.contents)
         self.assertTrue(img.absolute_url() in browser.contents)
         self.assertTrue("photoSwipe" in browser.contents)
+
+    def testSlideshowFields(self):
+        login(self.portal, TEST_USER_NAME)
+        setRoles(self.portal, TEST_USER_ID, ('Manager', ))
+
+        from Products.Archetypes.atapi import Field
+        page = api.content.create(self.portal, "Document", "test-page", "Test Page")
+        gallery = api.content.create(self.portal, "Gallery", "gallery", "Gallery")
+        img = api.content.create(gallery, "Image", "img1", "Image 1")
+
+        field = page.getField('slideshow_gallery')
+        self.assertTrue(isinstance(field, Field), "Page content type does not have a slideshow field")
+        field.set(page, gallery)
+
+        # Commit so it is visible in the browser
+        transaction.commit()
+
+        browser = Browser(self.layer['app'])
+        browser.handleErrors = False
+        browser.open(page.absolute_url())
+
+        self.assertTrue('uol-slideshow' in browser.contents)
+        self.assertTrue('"animspeed": 10000' in browser.contents)
+        self.assertTrue('"usecaptions": true' in browser.contents)
+        self.assertTrue(img.absolute_url() in browser.contents)
+
+        page.getField('time_delay').set(page, 5)
+        page.getField('show_captions').set(page, False)
+        transaction.commit()
+
+        browser.open(page.absolute_url())
+        self.assertTrue('"animspeed": 5000' in browser.contents)
+        self.assertTrue('"usecaptions": false' in browser.contents)
