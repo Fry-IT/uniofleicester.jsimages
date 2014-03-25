@@ -138,7 +138,8 @@
 
                 // enable pause on hover
                 if (settings.hoverpause && settings.automatic){
-                    conf_hoverpause();
+                    //conf_hoverpause();
+                    conf_clickpause();
                 }
 
                 // conf slide animation
@@ -187,10 +188,10 @@
                     'height'        : settings.height,
                     'width'         : '100%'
                 });
-                $slides.children('img').css({
+                /*$slides.children('img').css({
                     'height'        : settings.height,
                     'width'         : '100%'
-                });
+                });*/
                 $slider.css({
                     'height'        : settings.height,
                     'width'         : '100%'
@@ -206,9 +207,9 @@
                     $slides.css({
                         'height'        : responsive.height
                     });
-                    $slides.children('img').css({
+                    /*$slides.children('img').css({
                         'height'        : responsive.height
-                    });
+                    });*/
                     $slider.css({
                         'height'        : responsive.height
                     });
@@ -228,9 +229,9 @@
                     $slides.css({
                         'height'        : responsive.height
                     });
-                    $slides.children('img').css({
+                    /*$slides.children('img').css({
                         'height'        : responsive.height
-                    });
+                    });*/
                     $slider.css({
                         'height'        : responsive.height
                     });
@@ -246,13 +247,14 @@
 
                 // initial setup
                 $slides.css({
+                    'line-height'        : settings.height+"px",
                     'height'        : settings.height,
                     'width'         : settings.width
                 });
-                $slides.children('img').css({
+                /*$slides.children('img').css({
                     'height'        : settings.height,
                     'width'         : settings.width
-                });
+                });*/
                 $slider.css({
                     'height'        : settings.height,
                     'width'         : settings.width * settings.slidecount
@@ -550,6 +552,22 @@
                 }
             }, function () {
                 if (state.paused) {
+                    state.interval = setInterval(function () {
+                        go(vars.fwd, false);
+                    }, settings.animspeed);
+                    state.paused = false;
+                }
+            });
+
+        };
+
+        var conf_clickpause = function() {
+
+            $wrapper.click(function () {
+                if (!state.paused) {
+                    clearInterval(state.interval);
+                    state.paused = true;
+                } else {
                     state.interval = setInterval(function () {
                         go(vars.fwd, false);
                     }, settings.animspeed);

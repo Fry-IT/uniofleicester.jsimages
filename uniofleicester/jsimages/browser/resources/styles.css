@@ -60,4 +60,14 @@
 
 #content p.bjqs-caption{
 	background: rgba(255,255,255,0.5);
+    line-height: 1.5em;
 }
+
+#content li.bjqs-slide {
+    text-align: center;
+}
+
+#content li.bjqs-slide > img {
+    vertical-align: middle;
+}
+

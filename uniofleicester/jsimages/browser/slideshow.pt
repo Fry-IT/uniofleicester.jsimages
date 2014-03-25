@@ -2,7 +2,7 @@
     <!-- Replace with appropriate markup for JS slideshow -->
     <ul class="bjqs" tal:define="items view/images">
         <li tal:repeat="image items">
-            <img src="" alt="" tal:replace="structure python:image.tag(scale='mini', title=image.Description(), alt='')" />
+            <img src="" alt="" tal:replace="structure python:image.tag(scale='mini', title=image.Description(), alt=image.Title())" />
         </li>
     </ul>
 

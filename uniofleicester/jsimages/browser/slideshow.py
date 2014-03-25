@@ -37,8 +37,8 @@ class SlideshowViewlet(ViewletBase):
 
         data = {
             'animtype': 'slide',
-            'height': 250,
-            'width': 250,
+            'height': 200,
+            'width': 200,
             'responsive': True,
             'randomstart': False,
             'showcontrols': True,
