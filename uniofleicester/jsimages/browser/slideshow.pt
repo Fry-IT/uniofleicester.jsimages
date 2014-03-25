@@ -1,19 +1,19 @@
- <div class="uol-slideshow" tal:condition="view/gallery">
+<tal:block tal:condition="view/gallery">
+ <div class="uol-slideshow">
     <!-- Replace with appropriate markup for JS slideshow -->
     <ul class="bjqs" tal:define="items view/images">
         <li tal:repeat="image items">
             <img src="" alt="" tal:replace="structure python:image.tag(scale='mini', title=image.Description(), alt=image.Title())" />
         </li>
     </ul>
-
-    <script tal:content="view/options"></script>
-
-    <script class="secret-source">
-        $(document).ready(function() {
-            $('.uol-slideshow').bjqs(opts);
-            $('.uol-slideshow').css('float', 'right');
-        });
-    </script>
-
-
 </div>
+
+<script tal:content="view/options"></script>
+
+<script class="secret-source">
+$(document).ready(function() {
+    $('.uol-slideshow').bjqs(opts);
+    $('.uol-slideshow').css('float', 'right');
+});
+</script>
+</tal:block>
