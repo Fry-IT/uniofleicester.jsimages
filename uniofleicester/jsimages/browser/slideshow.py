@@ -1,6 +1,7 @@
 import json
 from Acquisition import aq_inner
 from plone.app.layout.viewlets.common import ViewletBase
+from plone.app.imaging import utils
 
 
 def field_getter(context, field_name, default=None):
@@ -16,6 +17,10 @@ class SlideshowViewlet(ViewletBase):
         super(SlideshowViewlet, self).update()
         context = aq_inner(self.context)
         self.gallery = field_getter(context, 'slideshow_gallery')
+        if isinstance(self.gallery, list):
+            self.gallery = self.gallery[0] if len(self.gallery) > 0 else None
+
+        self.slideshow_scale = field_getter(context, 'scale')
 
     def images(self):
         if not self.gallery:
@@ -35,10 +40,13 @@ class SlideshowViewlet(ViewletBase):
         delay = field_getter(context, 'time_delay', 10)
         caps = field_getter(context, 'show_captions', True)
 
+        scales = utils.getAllowedSizes()
+        width, height = scales.get(self.slideshow_scale, (200, 200))
+
         data = {
             'animtype': 'slide',
-            'height': 300,
-            'width': 300,
+            'height': height,
+            'width': width,
             'responsive': True,
             'randomstart': False,
             'showcontrols': True,

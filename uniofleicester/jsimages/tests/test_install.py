@@ -1,15 +1,22 @@
 # -*- coding: utf8 -*-
+from os.path import dirname, join
 from plone import api
 import unittest2
 from plone.testing.z2 import Browser
-from zope.component import getMultiAdapter
 
 from plone.app.testing import TEST_USER_NAME, TEST_USER_ID
 from plone.app.testing import login, setRoles
 import transaction
 
+from uniofleicester.jsimages import tests
 from uniofleicester.jsimages.tests.layer import FUNCTIONAL_TESTING
 from uniofleicester.jsimages.tests.layer import INTEGRATION_TESTING
+
+
+def getData(filename):
+    """ return contents of the file with the given name """
+    filename = join(dirname(tests.__file__), filename)
+    return open(filename, 'r').read()
 
 
 class IntegrationTest(unittest2.TestCase):
@@ -104,7 +111,7 @@ class FunctionalTest(unittest2.TestCase):
                           api.content.create, gallery, "Page", "page", "Page")
 
         # Adding an image should pass
-        img = api.content.create(gallery, "Image", "img1", "Image 1")
+        img = api.content.create(gallery, "Image", "img1", "Image 1", image=getData('image.jpg'))
 
         # Commit so it is visible in the browser
         transaction.commit()
@@ -124,11 +131,13 @@ class FunctionalTest(unittest2.TestCase):
         from Products.Archetypes.atapi import Field
         page = api.content.create(self.portal, "Document", "test-page", "Test Page")
         gallery = api.content.create(self.portal, "Gallery", "gallery", "Gallery")
-        img = api.content.create(gallery, "Image", "img1", "Image 1")
+        img = api.content.create(gallery, "Image", "img1", "Image 1", image=getData('image.jpg'))
 
         field = page.getField('slideshow_gallery')
         self.assertTrue(isinstance(field, Field), "Page content type does not have a slideshow field")
         field.set(page, gallery)
+
+        page.getField('scale').set(page, 'mini')
 
         # Commit so it is visible in the browser
         transaction.commit()
@@ -141,11 +150,16 @@ class FunctionalTest(unittest2.TestCase):
         self.assertTrue('"animspeed": 10000' in browser.contents)
         self.assertTrue('"usecaptions": true' in browser.contents)
         self.assertTrue(img.absolute_url() in browser.contents)
+        self.assertTrue('"width": 200' in browser.contents)     # bjqs options
+        self.assertTrue('width="200"' in browser.contents)     # image size
 
         page.getField('time_delay').set(page, 5)
         page.getField('show_captions').set(page, False)
+        page.getField('scale').set(page, 'preview')
         transaction.commit()
 
         browser.open(page.absolute_url())
         self.assertTrue('"animspeed": 5000' in browser.contents)
         self.assertTrue('"usecaptions": false' in browser.contents)
+        self.assertTrue('"width": 400' in browser.contents)     # bjqs options
+        self.assertTrue('width="400"' in browser.contents)     # image size

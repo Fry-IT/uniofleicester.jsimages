@@ -4,7 +4,7 @@
     <ul class="bjqs" tal:define="items view/images">
         <li tal:repeat="image items">
             <tal:block tal:define="scales image/@@images">
-                <img src="" alt="" tal:replace="structure python:scales.tag('image', width=300, height=300, title=image.Description(), alt=image.Title(), direction='down')" />
+                <img src="" alt="" tal:replace="structure python:scales.tag('image', scale=view.slideshow_scale, title=image.Description(), alt=image.Title(), direction='down')" />
             </tal:block>
         </li>
     </ul>

@@ -1,17 +1,33 @@
 from zope.component import adapts
 from zope.interface import implements
+from zope.schema.interfaces import IVocabularyFactory
+from zope.schema.vocabulary import SimpleVocabulary
 
 from Products.Archetypes.atapi import StringField, ReferenceField, \
         AnnotationStorage, IntegerField, StringWidget, BooleanField, \
-        BooleanWidget
+        BooleanWidget, SelectionWidget
 from Products.ATContentTypes.interfaces import IATDocument
 from Products.CMFCore.permissions import ModifyPortalContent
+
+from plone.app.imaging import utils
 
 from archetypes.schemaextender.field import ExtensionField
 from archetypes.schemaextender.interfaces import ISchemaExtender, IBrowserLayerAwareExtender
 from archetypes.referencebrowserwidget import ReferenceBrowserWidget
 
 from uniofleicester.jsimages.interfaces import IUOLImagesThemeLayer
+
+
+class ImageScalesVocabulary(object):
+    implements(IVocabularyFactory)
+
+    def __call__(self, context):
+        sizes = utils.getAllowedSizes()
+        values = sorted(sizes.items(), key=lambda x: -x[1][0])
+        terms = [SimpleVocabulary.createTerm(x, x, "%s (%s, %s)" % (x, y[0], y[1]))
+                 for x, y in values]
+
+        return SimpleVocabulary(terms)
 
 
 class ExBooleanField(ExtensionField, BooleanField):
@@ -40,7 +56,7 @@ class SlideshowExtender(object):
         ExReferenceField('slideshow_gallery',
             schemata='slideshow',
             relationship='relatesToGallery',
-            multiValued=False,
+            multiValued=True,
             write_permission=ModifyPortalContent,
             allowed_types=("Gallery", ),
             keepReferencesOnCopy=True,
@@ -85,6 +101,21 @@ class SlideshowExtender(object):
             widget=StringWidget(
                 description='',
                 label=u'Time delay in seconds'
+            )
+        ),
+
+        ExStringField('scale',
+            schemata='slideshow',
+            required=True,
+            default=10,
+            write_permission = ModifyPortalContent,
+            languageIndependent=True,
+            vocabulary_factory="uniofleicester.jsimages.imagesscalevocabulary",
+            enforceVocabulary=1,
+            storage=AnnotationStorage(),
+            widget=SelectionWidget(
+                description='',
+                label=u'Image scale to display'
             )
         ),
     ]

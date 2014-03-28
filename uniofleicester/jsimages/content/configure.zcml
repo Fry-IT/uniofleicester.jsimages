@@ -8,4 +8,10 @@
         factory=".extender.SlideshowExtender"
         provides="archetypes.schemaextender.interfaces.ISchemaExtender" />
 
+   	<utility
+		name="uniofleicester.jsimages.imagesscalevocabulary"
+		factory=".extender.ImageScalesVocabulary"
+		/>
+
+
 </configure>
