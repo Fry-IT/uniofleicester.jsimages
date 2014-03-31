@@ -55,3 +55,6 @@ class SlideshowViewlet(ViewletBase):
             'usecaptions': caps
         }
         return "var opts = {}".format(json.dumps(data))
+
+    def escape(self, text):
+        return text.replace('"', '&quot;')

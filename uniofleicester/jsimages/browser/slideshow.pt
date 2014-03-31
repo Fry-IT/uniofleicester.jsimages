@@ -3,8 +3,10 @@
     <!-- Replace with appropriate markup for JS slideshow -->
     <ul class="bjqs" tal:define="items view/images">
         <li tal:repeat="image items">
-            <tal:block tal:define="scales image/@@images">
-                <img src="" alt="" tal:replace="structure python:scales.tag('image', scale=view.slideshow_scale, title=image.Description(), alt=image.Title(), direction='down')" />
+            <tal:block tal:define="scales image/@@images;
+                                   title python: view.escape(image.Title());
+                                   description python: view.escape(image.Description())">
+                <img src="" alt="" tal:replace="structure python:scales.tag('image', scale=view.slideshow_scale, title=description, alt=title, direction='down')" />
             </tal:block>
         </li>
     </ul>
