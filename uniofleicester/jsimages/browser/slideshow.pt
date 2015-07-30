@@ -1,23 +1,37 @@
 <tal:block tal:condition="view/gallery">
- <div class="uol-slideshow">
-    <!-- Replace with appropriate markup for JS slideshow -->
-    <ul class="bjqs" tal:define="items view/images">
-        <li tal:repeat="image items">
-            <tal:block tal:define="scales image/@@images;
-                                   title python: view.escape(image.Title());
-                                   description python: view.escape(image.Description())">
-                <img src="" alt="" tal:replace="structure python:scales.tag('image', scale=view.slideshow_scale, title=description, alt=title, direction='down')" />
-            </tal:block>
-        </li>
-    </ul>
-</div>
 
-<script tal:content="view/options"></script>
+    <tal:slideshow define="items view/images;
+                           link  view/slideshow_link;
+                           scale view/slideshow_scale">
 
-<script class="secret-source">
-$(document).ready(function() {
-    $('.uol-slideshow').bjqs(opts);
-    $('.uol-slideshow').css('float', 'right');
-});
-</script>
+        <div class="uol-slideshow">
+            <!-- Replace with appropriate markup for JS slideshow -->
+            <ul class="bjqs">
+                <li tal:repeat="image items">
+                    <tal:block tal:define="scales image/@@images;
+                        title python:view.escape(image.Title());
+                        description python:view.escape(image.Description())">
+                        <a href="#" title=""
+                            tal:attributes="href link; alt title"
+                            ><img src="" alt=""
+                                tal:replace="structure python:scales.tag('image', scale=scale, title=description, alt=title, direction='down')" /></a>
+                    </tal:block>
+                </li>
+            </ul>
+        </div>
+    
+    </tal:slideshow>
+
+    <script tal:content="view/options"></script>
+    
+    <script class="secret-source">
+    $(document).ready(function() {
+        $('.uol-slideshow').bjqs(opts);
+        $('.uol-slideshow').css('float', opts['float']);
+        if (opts['float'] == 'none')  $(this).css('margin', '0 0 10px 0');
+        if (opts['float'] == 'left')  $(this).css('margin', '0 10px 10px 0');
+        if (opts['float'] == 'right') $(this).css('margin', '0 0 10px 10px');
+    });
+    </script>
+
 </tal:block>

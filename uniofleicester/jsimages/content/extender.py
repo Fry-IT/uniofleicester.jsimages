@@ -4,15 +4,17 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleVocabulary
 
 from Products.Archetypes.atapi import StringField, ReferenceField, \
-        AnnotationStorage, IntegerField, StringWidget, BooleanField, \
-        BooleanWidget, SelectionWidget
+    AnnotationStorage, IntegerField, StringWidget, BooleanField, \
+    BooleanWidget, SelectionWidget
+from Products.Archetypes.utils import DisplayList
 from Products.ATContentTypes.interfaces import IATDocument
 from Products.CMFCore.permissions import ModifyPortalContent
 
 from plone.app.imaging import utils
 
 from archetypes.schemaextender.field import ExtensionField
-from archetypes.schemaextender.interfaces import ISchemaExtender, IBrowserLayerAwareExtender
+from archetypes.schemaextender.interfaces import ISchemaExtender, \
+    IBrowserLayerAwareExtender
 from archetypes.referencebrowserwidget import ReferenceBrowserWidget
 
 from uniofleicester.jsimages.interfaces import IUOLImagesThemeLayer
@@ -74,7 +76,7 @@ class SlideshowExtender(object):
             schemata='slideshow',
             required=True,
             default=0,
-            write_permission = ModifyPortalContent,
+            write_permission=ModifyPortalContent,
             languageIndependent=True,
             storage=AnnotationStorage(),
             widget=StringWidget(
@@ -86,7 +88,7 @@ class SlideshowExtender(object):
         ExBooleanField('show_captions',
             default=True,
             schemata='slideshow',
-            widget = BooleanWidget(
+            widget=BooleanWidget(
                 label="Show image captions"
             )
         ),
@@ -95,7 +97,7 @@ class SlideshowExtender(object):
             schemata='slideshow',
             required=True,
             default=2,
-            write_permission = ModifyPortalContent,
+            write_permission=ModifyPortalContent,
             languageIndependent=True,
             storage=AnnotationStorage(),
             widget=StringWidget(
@@ -108,7 +110,7 @@ class SlideshowExtender(object):
             schemata='slideshow',
             required=True,
             default='preview',
-            write_permission = ModifyPortalContent,
+            write_permission=ModifyPortalContent,
             languageIndependent=True,
             vocabulary_factory="uniofleicester.jsimages.imagesscalevocabulary",
             enforceVocabulary=1,
@@ -118,6 +120,39 @@ class SlideshowExtender(object):
                 label=u'Image scale to display'
             )
         ),
+
+        ExStringField('slideshow_position',
+            schemata='slideshow',
+            required=True,
+            default='right',
+            write_permission=ModifyPortalContent,
+            languageIndependent=True,
+            vocabulary=DisplayList((
+                ('none', 'Center'), ('left', 'Left'), ('right', 'Right')
+            )),
+            enforceVocabulary=1,
+            storage=AnnotationStorage(),
+            widget=SelectionWidget(
+                description='',
+                label=u'Position on page'
+            )
+        ),
+
+        ExStringField('slideshow_link',
+            schemata='slideshow',
+            required=False,
+            default='',
+            validators='isLink',
+            write_permission=ModifyPortalContent,
+            languageIndependent=True,
+            storage=AnnotationStorage(),
+            widget=StringWidget(
+                description=u"Enter external URL or internal path e.g., "
+                    u"'/news'. If empty slideshow will point to gallery.",
+                label=u'Alternative link'
+            )
+        ),
+
     ]
 
     def __init__(self, context):
