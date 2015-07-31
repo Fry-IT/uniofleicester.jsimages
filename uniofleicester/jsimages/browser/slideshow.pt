@@ -28,9 +28,9 @@
     $(document).ready(function() {
         $('.uol-slideshow').bjqs(opts);
         $('.uol-slideshow').css('float', opts['float']);
-        if (opts['float'] == 'none')  $(this).css('margin', '0 0 10px 0');
-        if (opts['float'] == 'left')  $(this).css('margin', '0 10px 10px 0');
-        if (opts['float'] == 'right') $(this).css('margin', '0 0 10px 10px');
+        if (opts['float'] == 'none')  $('.uol-slideshow').css('margin', '0 0 15px 0');
+        if (opts['float'] == 'left')  $('.uol-slideshow').css('margin', '0 15px 15px 0');
+        if (opts['float'] == 'right') $('.uol-slideshow').css('margin', '0 0 15px 15px');
     });
     </script>
 
